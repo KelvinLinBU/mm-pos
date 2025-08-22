@@ -1,5 +1,6 @@
 # mm_pos/menu.py
 
+
 class MenuItem:
     def __init__(self, name: str, price: float, category: str = "General"):
         self.name = name
