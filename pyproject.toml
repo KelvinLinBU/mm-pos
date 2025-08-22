@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mm-pos"
+version = "0.1.0"
+description = "An open-source restaurant POS system"
+readme = "README.md"
+license = "MIT"
+authors = [
+  { name="Kelvin Lin", email="kelvin@bu.edu" }
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/KelvinLinBU/mm-pos"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mm_pos"]
