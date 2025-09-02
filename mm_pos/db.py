@@ -15,13 +15,16 @@ from datetime import datetime, timezone
 Base = declarative_base()
 
 
-# --- Database Models ---
 class MenuItemDB(Base):
     __tablename__ = "menu_items"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     category = Column(String, default="General")
+
+    inventory_links = relationship(
+        "MenuItemInventoryDB", back_populates="menu_item", cascade="all, delete-orphan"
+    )
 
 
 class UserDB(Base):
@@ -60,7 +63,6 @@ class OrderDB(Base):
     takeout = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    # ✅ add FK to TableDB
     table_id = Column(Integer, ForeignKey("tables.id"), nullable=True)
     table = relationship("TableDB", back_populates="orders")
 
@@ -109,6 +111,36 @@ class TableDB(Base):
     orders = relationship(
         "OrderDB", back_populates="table", cascade="all, delete-orphan"
     )
+
+
+class InventoryDB(Base):
+    __tablename__ = "inventory"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False, unique=True)  # e.g. "Burger Patty"
+    quantity = Column(
+        Float, nullable=False, default=0.0
+    )  # in units (e.g. pieces, liters)
+
+    # relationship: which menu items depend on this stock
+    menu_links = relationship(
+        "MenuItemInventoryDB", back_populates="inventory", cascade="all, delete-orphan"
+    )
+
+
+class MenuItemInventoryDB(Base):
+    """
+    Link table between MenuItem and Inventory.
+    Defines how much of each ingredient is used per menu item.
+    """
+
+    __tablename__ = "menu_item_inventory"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    menu_item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=False)
+    inventory_id = Column(Integer, ForeignKey("inventory.id"), nullable=False)
+    amount_used = Column(Float, nullable=False)  # how much stock is consumed per item
+
+    menu_item = relationship("MenuItemDB", back_populates="inventory_links")
+    inventory = relationship("InventoryDB", back_populates="menu_links")
 
 
 # --- Setup Functions ---

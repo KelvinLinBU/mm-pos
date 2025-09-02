@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from mm_pos.db import TableDB
 
+
 class TableManager:
     def __init__(self, session: Session):
         self.session = session

@@ -1,6 +1,7 @@
 from mm_pos.db import init_db, TableDB, OrderDB
 from mm_pos.tables import TableManager
 
+
 def test_table_lifecycle(tmp_path):
     db_path = tmp_path / "tables_test.db"
     Session = init_db(f"sqlite:///{db_path}")
@@ -18,6 +19,7 @@ def test_table_lifecycle(tmp_path):
     # Close table
     t1 = manager.close_table(1)
     assert t1.status == "closed"
+
 
 def test_merge_tables(tmp_path):
     db_path = tmp_path / "merge_test.db"
