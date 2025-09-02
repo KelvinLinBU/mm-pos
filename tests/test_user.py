@@ -7,7 +7,8 @@ def test_user_with_multiple_orders_and_payments(tmp_path):
     session = Session()
 
     # Create a user (waiter)
-    alice = UserDB(name="Alice", role="waiter", pin="1234")
+    alice = UserDB(name="Alice", role="waiter")
+    alice.set_pin("1234")  # ✅ hash the pin before saving
     session.add(alice)
     session.commit()
 
@@ -57,8 +58,11 @@ def test_user_role_permissions(tmp_path):
     session = Session()
 
     waiter = UserDB(name="Wally", role="waiter")
+    waiter.set_pin("1111")  # ✅ must set pin
     cashier = UserDB(name="Cathy", role="cashier")
+    cashier.set_pin("2222")
     admin = UserDB(name="Alice", role="admin")
+    admin.set_pin("3333")
 
     session.add_all([waiter, cashier, admin])
     session.commit()

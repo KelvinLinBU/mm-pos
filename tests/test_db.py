@@ -37,8 +37,9 @@ def test_create_user_and_link_to_order_and_payment(tmp_path):
     Session = init_db(f"sqlite:///{db_path}")
     session = Session()
 
-    # Create user
-    alice = UserDB(name="Alice", role="waiter", pin="1234")
+    # Create user with secure pin
+    alice = UserDB(name="Alice", role="waiter")
+    alice.set_pin("1234")   # ✅ hash pin before saving
     session.add(alice)
     session.commit()
 

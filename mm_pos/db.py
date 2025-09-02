@@ -11,6 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from datetime import datetime, timezone
+from passlib.hash import bcrypt
 
 Base = declarative_base()
 
@@ -25,35 +26,6 @@ class MenuItemDB(Base):
     inventory_links = relationship(
         "MenuItemInventoryDB", back_populates="menu_item", cascade="all, delete-orphan"
     )
-
-
-class UserDB(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    role = Column(String, nullable=False)  # "waiter", "cashier", "admin"
-    pin = Column(String, nullable=True)
-
-    # relationships
-    orders = relationship(
-        "OrderDB", back_populates="user", cascade="all, delete-orphan"
-    )
-    payments = relationship(
-        "PaymentDB", back_populates="user", cascade="all, delete-orphan"
-    )
-
-    # --- Role-based Permissions ---
-    def is_admin(self) -> bool:
-        return self.role.lower() == "admin"
-
-    def can_take_orders(self) -> bool:
-        return self.role.lower() in ("waiter", "cashier", "admin")
-
-    def can_process_payments(self) -> bool:
-        return self.role.lower() in ("cashier", "admin")
-
-    def can_view_reports(self) -> bool:
-        return self.role.lower() == "admin"
 
 
 class OrderDB(Base):
@@ -141,6 +113,30 @@ class MenuItemInventoryDB(Base):
 
     menu_item = relationship("MenuItemDB", back_populates="inventory_links")
     inventory = relationship("InventoryDB", back_populates="menu_links")
+
+
+class UserDB(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    role = Column(String, nullable=False)  # waiter, cashier, admin
+    pin_hash = Column(String, nullable=False)  # store hashed PIN instead of raw
+
+    orders = relationship("OrderDB", back_populates="user", cascade="all, delete-orphan")
+    payments = relationship("PaymentDB", back_populates="user", cascade="all, delete-orphan")
+
+    # --- Auth utilities ---
+    def set_pin(self, pin: str):
+        self.pin_hash = bcrypt.hash(pin)
+
+    def verify_pin(self, pin: str) -> bool:
+        return bcrypt.verify(pin, self.pin_hash)
+
+    # --- Role helpers ---
+    def is_admin(self): return self.role.lower() == "admin"
+    def can_take_orders(self): return self.role.lower() in ("waiter", "cashier", "admin")
+    def can_process_payments(self): return self.role.lower() in ("cashier", "admin")
+    def can_view_reports(self): return self.role.lower() == "admin"
 
 
 # --- Setup Functions ---
