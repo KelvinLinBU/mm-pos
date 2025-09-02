@@ -1,8 +1,8 @@
-# mm-pos
+# pos-mm
 
-`mm-pos` is an open-source Point of Sale (POS) library built to replace outdated and expensive systems many restaurants still rely on. It started as a project for my family-owned restaurant and is designed to provide a modern, flexible, and affordable foundation for handling orders, payments, receipts, tables, inventory, and reports.
+`pos-mm` is an open-source Point of Sale (POS) library built to replace outdated and expensive systems many restaurants still rely on. It started as a project for my family-owned restaurant and is designed to provide a modern, flexible, and affordable foundation for handling orders, payments, receipts, tables, inventory, and reports.
 
-The library focuses on being reusable and framework-agnostic. It can be integrated into web applications, desktop software, or custom automation workflows. Developers can build complete POS systems on top of `mm-pos` without having to implement the core business logic themselves.
+The library focuses on being reusable and framework-agnostic. It can be integrated into web applications, desktop software, or custom automation workflows. Developers can build complete POS systems on top of `pos-mm` without having to implement the core business logic themselves.
 
 ## Features
 
@@ -21,7 +21,7 @@ The library focuses on being reusable and framework-agnostic. It can be integrat
 Install the package from PyPI:
 
 ```bash
-pip install mm-pos
+pip install pos-mm
 ```
 
 ## Requirements
