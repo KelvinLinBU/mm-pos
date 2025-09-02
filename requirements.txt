@@ -1,1 +1,9 @@
 pytest
+fastapi
+passlib[bcrypt]
+httpx
+python-jose[cryptography]
+python-multipart
+sqlalchemy>=2.0
+uvicorn[standard]
+
