@@ -1,4 +1,4 @@
-from mm_pos.db import init_db, TableDB, OrderDB
+from mm_pos.db import init_db, OrderDB
 from mm_pos.tables import TableManager
 
 

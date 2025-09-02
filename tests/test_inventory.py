@@ -1,7 +1,6 @@
 import pytest
 from mm_pos.db import (
     init_db,
-    InventoryDB,
     MenuItemDB,
     MenuItemInventoryDB,
     OrderDB,
