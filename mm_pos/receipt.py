@@ -4,6 +4,7 @@ from datetime import datetime
 from mm_pos.order import Order
 from mm_pos.payment import Payment
 
+
 class Receipt:
     def __init__(self, order: Order, payment: Payment = None):
         self.order = order

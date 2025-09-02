@@ -2,6 +2,7 @@ from datetime import date
 from mm_pos.db import init_db, MenuItemDB, OrderDB, OrderItemDB, PaymentDB
 from mm_pos.reports import Reports
 
+
 def test_reports_generate_basic_stats(tmp_path):
     db_path = tmp_path / "reports_test.db"
     Session = init_db(f"sqlite:///{db_path}")
@@ -40,6 +41,7 @@ def test_reports_generate_basic_stats(tmp_path):
     # Payment breakdown should show 1 cash payment
     breakdown = reports.payment_breakdown(date.today())
     assert breakdown.get("cash") == 1
+
 
 def test_reports_csv_exports(tmp_path):
     db_path = tmp_path / "reports_csv.db"

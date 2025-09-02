@@ -28,7 +28,9 @@ class Reports:
     def top_selling_items(self, limit: int = 5):
         """Return top N selling items (name, quantity)."""
         results = (
-            self.session.query(MenuItemDB.name, func.sum(OrderItemDB.qty).label("total_qty"))
+            self.session.query(
+                MenuItemDB.name, func.sum(OrderItemDB.qty).label("total_qty")
+            )
             .join(OrderItemDB, MenuItemDB.id == OrderItemDB.menu_item_id)
             .group_by(MenuItemDB.name)
             .order_by(func.sum(OrderItemDB.qty).desc())
@@ -43,7 +45,9 @@ class Reports:
             day = date.today()
 
         results = (
-            self.session.query(PaymentDB.method, func.count(PaymentDB.id).label("count"))
+            self.session.query(
+                PaymentDB.method, func.count(PaymentDB.id).label("count")
+            )
             .filter(func.date(PaymentDB.timestamp) == day)
             .group_by(PaymentDB.method)
             .all()

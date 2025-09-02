@@ -3,6 +3,7 @@ from mm_pos.order import Order
 from mm_pos.receipt import Receipt
 from mm_pos.payment import Payment
 
+
 def test_receipt_contains_items_and_total():
     order = Order(table_number=3)
     burger = MenuItem("Burger", 8.99, "Food")
@@ -19,6 +20,7 @@ def test_receipt_contains_items_and_total():
     assert "1x Cola - $1.99" in receipt
     assert "Total: $19.97" in receipt
     assert "Thank you for dining with us!" in receipt
+
 
 def test_receipt_includes_payment_info():
     order = Order(table_number=2)

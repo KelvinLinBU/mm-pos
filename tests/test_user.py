@@ -1,5 +1,6 @@
 from mm_pos.db import init_db, UserDB, OrderDB, PaymentDB, MenuItemDB, OrderItemDB
 
+
 def test_user_with_multiple_orders_and_payments(tmp_path):
     db_path = tmp_path / "user_test.db"
     Session = init_db(f"sqlite:///{db_path}")
@@ -48,6 +49,7 @@ def test_user_with_multiple_orders_and_payments(tmp_path):
     # Check roles and linkage
     assert saved_user.orders[0].user == saved_user
     assert saved_user.payments[0].user == saved_user
+
 
 def test_user_role_permissions(tmp_path):
     db_path = tmp_path / "roles_test.db"

@@ -1,9 +1,19 @@
 # mm_pos/db.py
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, DateTime, Boolean
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Float,
+    ForeignKey,
+    DateTime,
+    Boolean,
+)
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from datetime import datetime, timezone
 
 Base = declarative_base()
+
 
 # --- Database Models ---
 class MenuItemDB(Base):
@@ -22,8 +32,12 @@ class UserDB(Base):
     pin = Column(String, nullable=True)
 
     # relationships
-    orders = relationship("OrderDB", back_populates="user", cascade="all, delete-orphan")
-    payments = relationship("PaymentDB", back_populates="user", cascade="all, delete-orphan")
+    orders = relationship(
+        "OrderDB", back_populates="user", cascade="all, delete-orphan"
+    )
+    payments = relationship(
+        "PaymentDB", back_populates="user", cascade="all, delete-orphan"
+    )
 
     # --- Role-based Permissions ---
     def is_admin(self) -> bool:
@@ -46,13 +60,20 @@ class OrderDB(Base):
     takeout = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
+    # ✅ add FK to TableDB
+    table_id = Column(Integer, ForeignKey("tables.id"), nullable=True)
+    table = relationship("TableDB", back_populates="orders")
+
     # FK to user
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     user = relationship("UserDB", back_populates="orders")
 
-    # relationships
-    items = relationship("OrderItemDB", back_populates="order", cascade="all, delete-orphan")
-    payments = relationship("PaymentDB", back_populates="order", cascade="all, delete-orphan")
+    items = relationship(
+        "OrderItemDB", back_populates="order", cascade="all, delete-orphan"
+    )
+    payments = relationship(
+        "PaymentDB", back_populates="order", cascade="all, delete-orphan"
+    )
 
 
 class OrderItemDB(Base):
@@ -79,9 +100,21 @@ class PaymentDB(Base):
     user = relationship("UserDB", back_populates="payments")
 
 
+class TableDB(Base):
+    __tablename__ = "tables"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    number = Column(Integer, unique=True, nullable=False)
+    status = Column(String, default="open")  # open, occupied, closed
+
+    orders = relationship(
+        "OrderDB", back_populates="table", cascade="all, delete-orphan"
+    )
+
+
 # --- Setup Functions ---
 def get_engine(db_url="sqlite:///mmpos.db"):
     return create_engine(db_url, echo=False)
+
 
 def init_db(engine=None):
     if engine is None:

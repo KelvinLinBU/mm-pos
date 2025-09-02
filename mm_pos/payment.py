@@ -2,13 +2,16 @@
 
 from mm_pos.order import Order
 
+
 class Payment:
     def __init__(self, order: Order, method: str, amount_given: float = None):
         self.order = order
         self.method = method.lower()
         self.amount_given = amount_given
 
-        if self.method == "cash" and (amount_given is None or amount_given < order.total()):
+        if self.method == "cash" and (
+            amount_given is None or amount_given < order.total()
+        ):
             raise ValueError("Insufficient cash provided for this order.")
 
     def change_due(self) -> float:
