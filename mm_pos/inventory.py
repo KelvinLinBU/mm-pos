@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from mm_pos.db import InventoryDB, MenuItemInventoryDB, OrderItemDB
+from mm_pos.db import InventoryDB
 
 
 class InventoryManager:

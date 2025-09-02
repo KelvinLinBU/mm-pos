@@ -3,19 +3,23 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mm-pos"
-version = "0.1.0"
-description = "An open-source restaurant POS system"
+name = "pos-mm"
+version = "0.1.01"
+description = "An open-source Point of Sale library for restaurants."
 readme = "README.md"
-license = "MIT"
+license = { text = "MIT" }
 authors = [
-  { name="Kelvin Lin", email="kelvin@bu.edu" }
+    { name = "Kelvin Lin", email = "kelvin@bu.edu" }
 ]
-dependencies = []
+requires-python = ">=3.9"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "passlib[bcrypt]",
+    "python-jose[cryptography]",
+    "python-multipart",
+    "fastapi",
+]
 
 [project.urls]
 Homepage = "https://github.com/KelvinLinBU/mm-pos"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["mm_pos"]
+Repository = "https://github.com/KelvinLinBU/mm-pos"
