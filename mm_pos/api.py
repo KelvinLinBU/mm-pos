@@ -33,7 +33,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 def create_access_token(data: dict, expires_delta: timedelta = None):
     """Create a signed JWT token for authentication."""
     to_encode = data.copy()
-    expire = datetime.now(UTC) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.now(UTC) + (
+        expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -58,6 +60,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 # Auth endpoints
 # ========================
 
+
 @app.post("/register/")
 def register_user(name: str = Form(...), role: str = Form(...), pin: str = Form(...)):
     """Register a new user (waiter, cashier, admin)."""
@@ -81,6 +84,7 @@ def login(name: str = Form(...), pin: str = Form(...)):
 # ========================
 # Menu endpoints
 # ========================
+
 
 @app.post("/menu/")
 def add_menu_item(
@@ -114,6 +118,7 @@ def list_menu_items(current_user: UserDB = Depends(get_current_user)):
 # ========================
 # Orders endpoints
 # ========================
+
 
 @app.post("/orders/")
 def create_order(
@@ -163,6 +168,7 @@ def add_item_to_order(
 # Payments endpoints
 # ========================
 
+
 @app.post("/payments/")
 def add_payment(
     order_id: int,
@@ -171,7 +177,9 @@ def add_payment(
     current_user: UserDB = Depends(get_current_user),
 ):
     if not current_user.can_process_payments():
-        raise HTTPException(status_code=403, detail="Not authorized to process payments")
+        raise HTTPException(
+            status_code=403, detail="Not authorized to process payments"
+        )
 
     order = session.get(OrderDB, order_id)
     if not order:
@@ -197,6 +205,7 @@ def add_payment(
 # ========================
 # Reports endpoints
 # ========================
+
 
 @app.get("/reports/daily/")
 def daily_sales(current_user: UserDB = Depends(get_current_user)):
@@ -225,6 +234,7 @@ def payment_breakdown(current_user: UserDB = Depends(get_current_user)):
 # ========================
 # Tables endpoints
 # ========================
+
 
 @app.post("/tables/open/")
 def open_table(number: int, current_user: UserDB = Depends(get_current_user)):

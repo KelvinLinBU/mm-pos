@@ -39,7 +39,7 @@ def test_create_user_and_link_to_order_and_payment(tmp_path):
 
     # Create user with secure pin
     alice = UserDB(name="Alice", role="waiter")
-    alice.set_pin("1234")   # ✅ hash pin before saving
+    alice.set_pin("1234")  # ✅ hash pin before saving
     session.add(alice)
     session.commit()
 

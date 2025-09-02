@@ -122,8 +122,12 @@ class UserDB(Base):
     role = Column(String, nullable=False)  # waiter, cashier, admin
     pin_hash = Column(String, nullable=False)  # store hashed PIN instead of raw
 
-    orders = relationship("OrderDB", back_populates="user", cascade="all, delete-orphan")
-    payments = relationship("PaymentDB", back_populates="user", cascade="all, delete-orphan")
+    orders = relationship(
+        "OrderDB", back_populates="user", cascade="all, delete-orphan"
+    )
+    payments = relationship(
+        "PaymentDB", back_populates="user", cascade="all, delete-orphan"
+    )
 
     # --- Auth utilities ---
     def set_pin(self, pin: str):
@@ -133,10 +137,17 @@ class UserDB(Base):
         return bcrypt.verify(pin, self.pin_hash)
 
     # --- Role helpers ---
-    def is_admin(self): return self.role.lower() == "admin"
-    def can_take_orders(self): return self.role.lower() in ("waiter", "cashier", "admin")
-    def can_process_payments(self): return self.role.lower() in ("cashier", "admin")
-    def can_view_reports(self): return self.role.lower() == "admin"
+    def is_admin(self):
+        return self.role.lower() == "admin"
+
+    def can_take_orders(self):
+        return self.role.lower() in ("waiter", "cashier", "admin")
+
+    def can_process_payments(self):
+        return self.role.lower() in ("cashier", "admin")
+
+    def can_view_reports(self):
+        return self.role.lower() == "admin"
 
 
 # --- Setup Functions ---
